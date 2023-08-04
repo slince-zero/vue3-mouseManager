@@ -19,7 +19,11 @@ app.use(gloablComponent)
 // 引入模板的全局样式
 import '@/styles/index.scss'
 
+// 引入路由
 import router from './router'
 app.use(router)
 
+// 引入仓库-状态管理
+import pinia from './store'
+app.use(pinia)
 app.mount('#app')

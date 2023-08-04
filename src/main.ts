@@ -19,4 +19,7 @@ app.use(gloablComponent)
 // 引入模板的全局样式
 import '@/styles/index.scss'
 
+import router from './router'
+app.use(router)
+
 app.mount('#app')

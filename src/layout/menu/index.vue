@@ -31,7 +31,7 @@
           </template>
         </el-menu-item>
       </template>
-      <!-- 有子路由且个数大于一个1 -->
+      <!-- 有子路由且个数大于一个 -->
       <el-sub-menu
         :index="item.path"
         v-if="item.children && item.children.length > 1"

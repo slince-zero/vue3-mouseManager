@@ -1,7 +1,7 @@
 <!-- 封装logo组件 -->
 <template>
   <div class="logo">
-    <img src="../../../public/g.png" alt="" />
+    <img src="../../../g.png" alt="" />
     <p>小鼠管理平台</p>
   </div>
 </template>

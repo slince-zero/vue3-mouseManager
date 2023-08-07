@@ -26,4 +26,10 @@ app.use(router)
 // 引入仓库-状态管理
 import pinia from './store'
 app.use(pinia)
+
+// 全局引入注册图标
+import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+  app.component(key, component)
+}
 app.mount('#app')

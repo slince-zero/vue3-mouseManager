@@ -11,8 +11,13 @@
         </el-scrollbar>
       </el-aside>
       <el-container>
+        <!-- 顶部导航 -->
         <el-header class="layout_tabbar">Header</el-header>
-        <el-main class="layout_main">Main</el-main>
+        <!-- 主题内容 -->
+        <el-main class="layout_main">
+          <!-- <router-view></router-view> -->
+          <Main></Main>
+        </el-main>
       </el-container>
     </el-container>
   </div>
@@ -24,6 +29,9 @@ import Logo from './logo/index.vue'
 // 引入菜单组件
 import Menu from './menu/index.vue'
 
+// 引入Main内容组件，直接使用<router-view></router-view>
+// 封装的目的是为了添加一些跳转时候的过渡特效
+import Main from './main/index.vue'
 // 引入用户相关的小仓库
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
@@ -45,5 +53,8 @@ const userStore = useUserStore()
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
+}
+.layout_tabbar{
+  background-color:yellowgreen;
 }
 </style>

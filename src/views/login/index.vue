@@ -51,7 +51,7 @@ const login = async () => {
       type: 'success',
       message: '登录成功',
     })
-  } catch (error) {
+  } catch (error:any) {
     ElNotification({
       type: 'error',
       message: error.message,

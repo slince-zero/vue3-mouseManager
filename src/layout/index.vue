@@ -6,20 +6,8 @@
         <Logo></Logo>
         <!-- 左侧菜单 -->
         <el-scrollbar class="scrollbar">
-          <el-menu background-color="pink" text-color="white">
-            <!-- 这里的index是唯一标识 -->
-            <el-menu-item index="1">首页</el-menu-item>
-            <el-menu-item index="2">数据大屏</el-menu-item>
-            <!-- 折叠菜单 -->
-            <el-sub-menu index="3">
-              <template #title>
-                <span>权限管理</span>
-              </template>
-              <el-menu-item index="2-1">用户管理</el-menu-item>
-              <el-menu-item index="2-2">角色管理</el-menu-item>
-              <el-menu-item index="2-3">菜单管理</el-menu-item>
-            </el-sub-menu>
-          </el-menu>
+          <!-- 根据路由动态生成菜单 -->
+          <Menu :menuList="userStore.menuRoutes"></Menu>
         </el-scrollbar>
       </el-aside>
       <el-container>
@@ -33,6 +21,12 @@
 <script lang="ts" setup>
 // 引入logo组件
 import Logo from './logo/index.vue'
+// 引入菜单组件
+import Menu from './menu/index.vue'
+
+// 引入用户相关的小仓库
+import useUserStore from '@/store/modules/user'
+const userStore = useUserStore()
 </script>
 
 <style lang="scss" scoped>
@@ -44,6 +38,9 @@ import Logo from './logo/index.vue'
   width: 100%;
   height: calc(100vh - 50px);
   margin-top: 10px;
+  .el-menu{
+    border-right:none;
+  }
 }
 ::-webkit-scrollbar {
   width: 0;

@@ -5,9 +5,11 @@
         <!-- Aside -->
         <Logo></Logo>
         <!-- 左侧菜单 -->
-        <el-scrollbar class="scrollbar">
-          <!-- 根据路由动态生成菜单 -->
-          <Menu :menuList="userStore.menuRoutes"></Menu>
+        <el-scrollbar  class="scrollbar">
+          <el-menu mode="vertical" collapse>
+            <!-- 根据路由动态生成菜单 -->
+            <Menu :menuList="userStore.menuRoutes"></Menu>
+          </el-menu>
         </el-scrollbar>
       </el-aside>
       <el-container>
@@ -46,15 +48,15 @@ const userStore = useUserStore()
   width: 100%;
   height: calc(100vh - 50px);
   margin-top: 10px;
-  .el-menu{
-    border-right:none;
+  .el-menu {
+    border-right: none;
   }
 }
 ::-webkit-scrollbar {
   width: 0;
   height: 0;
 }
-.layout_tabbar{
-  background-color:yellowgreen;
+.layout_tabbar {
+  background-color: yellowgreen;
 }
 </style>

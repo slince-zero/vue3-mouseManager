@@ -1,5 +1,5 @@
 <template>
-  <el-menu>
+  <el-menu :default-active="$route.path">
     <template v-for="item in menuList" :key="item.path">
       <!--没有子路由-->
       <template v-if="!item.children">
@@ -49,6 +49,8 @@
 </template>
 
 <script setup lang="ts">
+// 引入路由对象，目的是为了获取点击菜单时候的路径
+import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
 //获取父组件传递过来的全部路由数组
 defineProps(['menuList'])
@@ -60,6 +62,8 @@ const goRoute = (vc: any) => {
   //路由跳转
   $router.push(vc.index)
 }
+// 获取路由对象
+const $route = useRoute()
 </script>
 <script lang="ts">
 export default {

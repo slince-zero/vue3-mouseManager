@@ -5,16 +5,16 @@
         <!-- Aside -->
         <Logo></Logo>
         <!-- 左侧菜单 -->
-        <el-scrollbar  class="scrollbar">
-          <el-menu mode="vertical" collapse>
-            <!-- 根据路由动态生成菜单 -->
-            <Menu :menuList="userStore.menuRoutes"></Menu>
-          </el-menu>
+        <el-scrollbar class="scrollbar">
+          <!-- 根据路由动态生成菜单 -->
+          <Menu :menuList="userStore.menuRoutes"></Menu>
         </el-scrollbar>
       </el-aside>
       <el-container>
         <!-- 顶部导航 -->
-        <el-header class="layout_tabbar">Header</el-header>
+        <el-header class="layout_tabbar">
+          <Tabbar></Tabbar>
+        </el-header>
         <!-- 主题内容 -->
         <el-main class="layout_main">
           <!-- <router-view></router-view> -->
@@ -28,8 +28,11 @@
 <script lang="ts" setup>
 // 引入logo组件
 import Logo from './logo/index.vue'
-// 引入菜单组件
+// 引入左侧菜单组件
 import Menu from './menu/index.vue'
+
+// 引入顶部导航组件
+import Tabbar from './tabbar/index.vue'
 
 // 引入Main内容组件，直接使用<router-view></router-view>
 // 封装的目的是为了添加一些跳转时候的过渡特效
@@ -57,6 +60,6 @@ const userStore = useUserStore()
   height: 0;
 }
 .layout_tabbar {
-  background-color: yellowgreen;
+  // background-color: yellowgreen;
 }
 </style>

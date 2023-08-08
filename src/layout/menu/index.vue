@@ -1,5 +1,8 @@
 <template>
-  <el-menu :default-active="$route.path">
+  <el-menu
+    :default-active="$route.path"
+    :collapse="useLayout.fold ? true : false"
+  >
     <template v-for="item in menuList" :key="item.path">
       <!--没有子路由-->
       <template v-if="!item.children">
@@ -49,6 +52,8 @@
 </template>
 
 <script setup lang="ts">
+import useLayoutStore from '@/store/setting'
+
 // 引入路由对象，目的是为了获取点击菜单时候的路径
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
@@ -64,6 +69,8 @@ const goRoute = (vc: any) => {
 }
 // 获取路由对象
 const $route = useRoute()
+
+const useLayout = useLayoutStore()
 </script>
 <script lang="ts">
 export default {

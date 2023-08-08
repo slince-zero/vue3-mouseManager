@@ -5,18 +5,27 @@
         <!-- Aside -->
         <Logo></Logo>
         <!-- 左侧菜单 -->
-        <el-scrollbar class="scrollbar">
+        <el-scrollbar
+          class="scrollbar"
+          :class="{ fold: useLayout.fold ? true : false }"
+        >
           <!-- 根据路由动态生成菜单 -->
           <Menu :menuList="userStore.menuRoutes"></Menu>
         </el-scrollbar>
       </el-aside>
       <el-container>
         <!-- 顶部导航 -->
-        <el-header class="layout_tabbar">
+        <el-header
+          class="layout_tabbar"
+          :class="{ fold: useLayout.fold ? true : false }"
+        >
           <Tabbar></Tabbar>
         </el-header>
         <!-- 主题内容 -->
-        <el-main class="layout_main">
+        <el-main
+          class="layout_main"
+          :class="{ fold: useLayout.fold ? true : false }"
+        >
           <!-- <router-view></router-view> -->
           <Main></Main>
         </el-main>
@@ -40,17 +49,25 @@ import Main from './main/index.vue'
 // 引入用户相关的小仓库
 import useUserStore from '@/store/modules/user'
 const userStore = useUserStore()
+
+// 引入layout设置小仓库
+import useLayoutStore from '@/store/setting'
+const useLayout = useLayoutStore()
 </script>
 
 <style lang="scss" scoped>
 .layout_slider {
   background-color: pink;
   height: 100vh;
+  transition: all 0.3s;
 }
 .scrollbar {
-  width: 100%;
+  width: 200px;
   height: calc(100vh - 50px);
   margin-top: 10px;
+  &.fold {
+    width: 49px;
+  }
   .el-menu {
     border-right: none;
   }
@@ -60,6 +77,16 @@ const userStore = useUserStore()
   height: 0;
 }
 .layout_tabbar {
-  // background-color: yellowgreen;
+  transition: all 0.3s;
+  &.fold {
+    // width: calc(100vw - 49px);
+  }
+}
+
+.layout_main {
+  transition: all 0.3s;
+  &.fold {
+    // width: calc(100vw - 49px);
+  }
 }
 </style>

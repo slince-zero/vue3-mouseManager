@@ -17,9 +17,9 @@ export const constRoute: RouteRecordRaw[] = [
     component: () => import('@/layout/index.vue'),
     name: 'layout',
     meta: {
-      title: 'layout',
+      title: '',
       hidden: false,
-      icon: 'Present',
+      icon: '',
     },
     redirect: '/home',
     children: [
@@ -74,6 +74,7 @@ export const constRoute: RouteRecordRaw[] = [
       title: '权限管理',
       icon: 'IceDrink',
     },
+    redirect:'/acl/user',
     children: [
       {
         path: '/acl/user',
@@ -117,6 +118,7 @@ export const constRoute: RouteRecordRaw[] = [
       icon: 'Goods',
       hidden: false,
     },
+    redirect:'/product/trademark',
     children: [
       {
         path: '/product/trademark',

@@ -1,7 +1,12 @@
 <template>
   <!-- 顶部右侧，全屏。。-->
   <div class="tabbar_right">
-    <el-button size="small" circle icon="Refresh"></el-button>
+    <el-button
+      size="small"
+      circle
+      icon="Refresh"
+      @click="updateRefresh"
+    ></el-button>
     <el-button size="small" circle icon="FullScreen"></el-button>
     <el-button size="small" circle icon="Setting"></el-button>
     <img
@@ -25,6 +30,14 @@
   </div>
 </template>
 
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+// 引入小仓库里面定义的useLayoutStore，所有组件都可以使用到
+import useLayoutStore from '@/store/setting'
+const useLayout = useLayoutStore()
+
+const updateRefresh = () => {
+  useLayout.refresh = !useLayout.refresh
+}
+</script>
 
 <style lang="scss" scoped></style>

@@ -18,7 +18,7 @@
           <component :is="item.meta.icon"></component>
         </el-icon>
         <!-- 面包屑匹配的路由标题 -->
-        <span style="margin: 0 4px;">{{ item.meta.title }}</span>
+        <span style="margin: 0 4px">{{ item.meta.title }}</span>
       </el-breadcrumb-item>
     </el-breadcrumb>
   </div>
@@ -37,6 +37,7 @@ const changeIcon = () => {
 }
 // 获取路由对象
 const $route = useRoute()
+
 </script>
 
 <style lang="scss" scoped></style>

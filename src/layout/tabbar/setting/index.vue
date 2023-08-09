@@ -7,7 +7,12 @@
       icon="Refresh"
       @click="updateRefresh"
     ></el-button>
-    <el-button size="small" circle icon="FullScreen"></el-button>
+    <el-button
+      size="small"
+      circle
+      icon="FullScreen"
+      @click="updateFullScreen"
+    ></el-button>
     <el-button size="small" circle icon="Setting"></el-button>
     <img
       src="../../../public/g.png"
@@ -35,8 +40,22 @@
 import useLayoutStore from '@/store/setting'
 const useLayout = useLayoutStore()
 
+// 更新
 const updateRefresh = () => {
   useLayout.refresh = !useLayout.refresh
+}
+
+// 全屏
+const updateFullScreen = () => {
+  let full = document.fullscreenElement
+  if (!full) {
+    // document.fullscreenElement 会判断页面是否是全屏，如果不是返回null
+    // requestFullscreen方法可以切换全屏
+    document.documentElement.requestFullscreen()
+  } else {
+    // 退出全屏
+    document.exitFullscreen()
+  }
 }
 </script>
 

@@ -15,13 +15,13 @@
     ></el-button>
     <el-button size="small" circle icon="Setting"></el-button>
     <img
-      src="../../../public/g.png"
+      :src="userStore.avatar"
       alt=""
       style="width: 24px; height: 24px; margin: 0 10px"
     />
     <el-dropdown>
       <span class="el-dropdown-link">
-        admin
+        {{ userStore.username }}
         <el-icon class="el-icon--right">
           <arrow-down />
         </el-icon>
@@ -36,10 +36,13 @@
 </template>
 
 <script lang="ts" setup>
+import useUserStore from '@/store/modules/user'
 // 引入小仓库里面定义的useLayoutStore，所有组件都可以使用到
 import useLayoutStore from '@/store/setting'
 const useLayout = useLayoutStore()
 
+// 引入用户小仓库
+const userStore = useUserStore()
 // 更新
 const updateRefresh = () => {
   useLayout.refresh = !useLayout.refresh

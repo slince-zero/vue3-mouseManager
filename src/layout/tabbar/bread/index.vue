@@ -15,7 +15,7 @@
       >
         <!-- 图标 -->
         <el-icon>
-          <component :is="item.meta.icon"></component>
+          <component :is="item.meta.icon" v-if="item.meta.icon"></component>
         </el-icon>
         <!-- 面包屑匹配的路由标题 -->
         <span style="margin: 0 4px">{{ item.meta.title }}</span>
@@ -37,7 +37,6 @@ const changeIcon = () => {
 }
 // 获取路由对象
 const $route = useRoute()
-
 </script>
 
 <style lang="scss" scoped></style>

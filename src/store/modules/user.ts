@@ -1,7 +1,7 @@
 // 创建用户相关的小仓库
 import { defineStore } from 'pinia'
 // 引入登录接口
-import { reqLogin } from '@/api/user'
+import { reqLogin, reqUserInfo } from '@/api/user'
 // 引入数据类型
 import type { loginForm } from '@/api/user/type'
 
@@ -13,6 +13,8 @@ const useUserStore = defineStore('User', {
     return {
       token: localStorage.getItem('TOKEN'),
       menuRoutes: constRoute, // 仓库存储生成菜单需要的路由数组
+      username: '', // 用户姓名
+      avatar: '', // 用户头像
     }
   },
   // 异步|逻辑
@@ -33,6 +35,15 @@ const useUserStore = defineStore('User', {
         console.log(result.data.message)
 
         return Promise.reject(new Error(result.data.message))
+      }
+    },
+    // 获取用户信息
+    async userInfo() {
+      // 获取用户信息，头像名字
+      const result = await reqUserInfo()
+      if (result.code == 200) {
+        this.username = result.data.checkUser.username
+        this.avatar = result.data.checkUser.avatar
       }
     },
   },

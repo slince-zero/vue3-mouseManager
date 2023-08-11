@@ -28,7 +28,7 @@
       </span>
       <template #dropdown>
         <el-dropdown-menu>
-          <el-dropdown-item>退出登录</el-dropdown-item>
+          <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
         </el-dropdown-menu>
       </template>
     </el-dropdown>
@@ -36,6 +36,7 @@
 </template>
 
 <script lang="ts" setup>
+import { useRouter } from 'vue-router'
 import useUserStore from '@/store/modules/user'
 // 引入小仓库里面定义的useLayoutStore，所有组件都可以使用到
 import useLayoutStore from '@/store/setting'
@@ -48,6 +49,8 @@ const updateRefresh = () => {
   useLayout.refresh = !useLayout.refresh
 }
 
+// 获取路由对象
+const $router = useRouter()
 // 全屏
 const updateFullScreen = () => {
   let full = document.fullscreenElement
@@ -59,6 +62,14 @@ const updateFullScreen = () => {
     // 退出全屏
     document.exitFullscreen()
   }
+}
+
+// 退出
+const logout = () => {
+  userStore.userLogout()
+  $router.push({ path: '/login' })
+  // 两种写法是等价的，只不过上面那个传的是对象
+  // $router.push('/login')
 }
 </script>
 

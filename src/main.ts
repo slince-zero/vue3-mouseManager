@@ -27,6 +27,9 @@ app.use(router)
 import pinia from './store'
 app.use(pinia)
 
+// 引入路由鉴权--全局路由守卫
+import './permission'
+
 // 全局引入注册图标
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {

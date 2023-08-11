@@ -46,6 +46,14 @@ const useUserStore = defineStore('User', {
         this.avatar = result.data.checkUser.avatar
       }
     },
+    // 用户退出登录
+    userLogout() {
+      // 由于没有退出接口，自己清空用户相关数据
+      ;(this.token = ''),
+        (this.username = ''),
+        (this.avatar = ''),
+        localStorage.removeItem('TOKEN')
+    },
   },
   getters: {},
 })

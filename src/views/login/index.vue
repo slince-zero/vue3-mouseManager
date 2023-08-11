@@ -35,7 +35,7 @@ import useUserStore from '@/store/modules/user'
 import { useRouter } from 'vue-router'
 import { ElNotification } from 'element-plus'
 // 定义一个响应式数据
-const loginForm = reactive({ username: 'admin', password: '111111' })
+const loginForm = reactive({ username: 'admin', password: 'atguigu123' })
 // 获取小仓库
 const useStore = useUserStore()
 

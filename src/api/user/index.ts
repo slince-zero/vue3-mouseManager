@@ -1,6 +1,8 @@
 // 统一管理项目中用户相关的接口
 
 import request from '@/utils/request'
+
+/*
 import type { loginForm, loginResponseData, userResponseDara } from './type'
 
 enum API {
@@ -15,3 +17,20 @@ export const reqLogin = (data: loginForm) =>
 // 获取用户信息接口方法
 export const reqUserInfo = () =>
   request.get<any, userResponseDara>(API.USERINFO_URL)
+*/
+
+// 项目用户相关的请求地址
+enum API {
+  LOGIN_URL = '/admin/acl/index/login',
+  USERINFO_URL = '/admin/acl/index/info',
+  LOGOUT_URL = '/admin/acl/index/logout',
+}
+
+// 登录接口
+export const reqLogin = (data: any) => request.post<any, any>(API.LOGIN_URL)
+
+// 获取用户信息
+export const reqUserInfo = () => request.get<any, any>(API.USERINFO_URL)
+
+// 退出接口
+export const reqLogout = () => request.post<any, any>(API.LOGOUT_URL)

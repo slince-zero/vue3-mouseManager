@@ -1,10 +1,11 @@
 // 创建用户相关的小仓库
 import { defineStore } from 'pinia'
 // 引入登录接口
-import { reqLogin, reqUserInfo } from '@/api/user'
+import { reqLogin, reqUserInfo ,reqLogout} from '@/api/user'
+/*
 // 引入数据类型
 import type { loginForm } from '@/api/user/type'
-
+*/
 // 引入路由（常量路由）
 import { constRoute } from '@/router/routes'
 const useUserStore = defineStore('User', {
@@ -20,9 +21,11 @@ const useUserStore = defineStore('User', {
   // 异步|逻辑
   actions: {
     // 用户登录
-    async userLogin(data: loginForm) {
+    async userLogin(data: any) {
       // 登录请求
       const result: any = await reqLogin(data)
+      console.log(result);
+      
       // 登录请求成功：200--返回token
       // 登录请求失败：201--返回错误信息
       if (result.code == 200) {

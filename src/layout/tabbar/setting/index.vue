@@ -65,8 +65,8 @@ const updateFullScreen = () => {
 }
 
 // 退出
-const logout = () => {
-  userStore.userLogout()
+const logout = async () => {
+  await userStore.userLogout()
   $router.push({ path: '/login' })
   // 两种写法是等价的，只不过上面那个传的是对象
   // $router.push('/login')

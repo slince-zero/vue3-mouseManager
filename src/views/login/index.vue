@@ -1,13 +1,14 @@
 <template>
   <div class="login_container">
     <el-row>
-      <el-col :span="12" :xs="0">啊实打实</el-col>
+      <el-col :span="12" :xs="0"></el-col>
       <el-col :span="12" :xs="24">
         <el-form class="login_form" :rules="rules">
           <el-form-item prop="username">
             <el-input
               v-model="loginForm.username"
               :prefix-icon="User"
+              @click="test"
             ></el-input>
           </el-form-item>
           <el-form-item prop="password">
@@ -51,7 +52,7 @@ const login = async () => {
       type: 'success',
       message: '登录成功',
     })
-  } catch (error:any) {
+  } catch (error: any) {
     ElNotification({
       type: 'error',
       message: error.message,
@@ -63,6 +64,10 @@ const login = async () => {
 const rules = {
   username: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
   password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
+}
+
+const test = () => {
+  console.log(loginForm.username)
 }
 </script>
 

@@ -39,6 +39,8 @@
       :background="true"
       layout=" prev, pager, next,jumper,->,sizes,total"
       :total="total"
+      @click="changePageNo"
+      @size-change="sizeChange"
     />
   </el-card>
 </template>
@@ -74,6 +76,18 @@ const getHasTrademark = async () => {
 onMounted(() => {
   getHasTrademark()
 })
+
+// 分页器当前页码发生改变时触发
+const changePageNo = () => {
+  // 重新发起请求
+  getHasTrademark()
+}
+
+//
+const sizeChange = () => {
+  pageNo.value = 1
+  getHasTrademark()
+}
 </script>
 
 <style lang="scss" scoped></style>

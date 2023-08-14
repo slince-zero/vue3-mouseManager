@@ -6,8 +6,8 @@ export interface ResponseData {
 
 // 定义已有的品牌数据类型
 export interface TradeMark {
-  id?: number
-  tmName: string
+  id?: number,
+  tmName: string,
   logoUrl: string
 }
 

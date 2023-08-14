@@ -4,11 +4,11 @@ import request from '@/utils/request'
 import { TradeMarkResponseData, TradeMark } from './type'
 enum API {
   // 获取已有品牌接口
-  TRADEMARK_URL = '/admin/product/baseTrademark/',
+  TRADEMARK_URL = 'http://114.115.179.162:8022/prod-api/admin/product/baseTrademark/',
   // 添加品牌
-  ADDTRADEMARK_URL = '/admin/product/baseTrademark/save',
+  ADDTRADEMARK_URL = 'http://114.115.179.162:8022/prod-api/admin/product/baseTrademark/save',
   // 修改品牌
-  UPDATETRADEMARK_URL = '/admin/product/baseTrademark/update',
+  UPDATETRADEMARK_URL = 'http://114.115.179.162:8022/prod-api/admin/product/baseTrademark/update/',
 }
 
 // page：获取第几页，默认第一页
@@ -20,10 +20,13 @@ export const reqHasTrademark = (page: number, limit: number) =>
 
 // 添加和修改
 export const reqAddOrUpdateTradeMark = (data: TradeMark) => {
+    console.log(data,'ddd')
   // 修改
   if (data.id) {
     return request.put<any, any>(API.UPDATETRADEMARK_URL, data)
   } else {
-    return request.post<any, any>(API.ADDTRADEMARK_URL)
+    debugger
+    console.log(request.post<any, any>(API.ADDTRADEMARK_URL,data))
+    return request.post<any, any>(API.ADDTRADEMARK_URL,data)
   }
 }

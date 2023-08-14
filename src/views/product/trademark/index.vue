@@ -70,8 +70,9 @@
         <el-form-item label="品牌LOGO" label-width="80px">
           <el-upload
             class="avatar-uploader"
-            action="http://139.198.104.58:8209/admin/product/fileUpload"
+            action="http://114.115.179.162:8022/prod-api/admin/product/fileUpload"
             :show-file-list="false"
+            :on-success="handleAvatarSuccess"
           >
             <img
               v-if="tradeMarkParams.logoUrl"
@@ -91,13 +92,18 @@
 </template>
 
 <script lang="ts" setup>
-import { reqHasTrademark } from '@/api/product/trademark'
+import {
+  reqHasTrademark,
+  reqAddOrUpdateTradeMark,
+} from '@/api/product/trademark'
 import { ref, onMounted, reactive } from 'vue'
 import {
   Records,
   TradeMarkResponseData,
   TradeMark,
 } from '@/api/product/trademark/type'
+import { ElMessage } from 'element-plus'
+
 // 当前页码
 const pageNo = ref<number>(1)
 // 每一页展示多少条数据
@@ -147,6 +153,11 @@ const sizeChange = () => {
   getHasTrademark()
 }
 
+// 上传品牌
+const handleAvatarSuccess = (response: any) => {
+  tradeMarkParams.logoUrl = response.data
+}
+
 // 添加品牌
 const addTradeMark = () => {
   dialogFormVisible.value = true
@@ -166,8 +177,19 @@ const cancle = () => {
   dialogFormVisible.value = false
 }
 // 提交
-const submit = () => {
-  dialogFormVisible.value = false
+const submit = async () => {
+  const result: any = await reqAddOrUpdateTradeMark(tradeMarkParams)
+  console.log(result)
+
+  if (result.code == 200) {
+    // 上传成功
+    dialogFormVisible.value = false
+    ElMessage({
+      type: 'success',
+      message: '添加成功',
+    })
+    getHasTrademark()
+  }
 }
 </script>
 

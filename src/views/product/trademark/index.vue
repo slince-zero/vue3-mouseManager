@@ -35,12 +35,18 @@
               icon="Edit"
               @click="updateTradeMark(row)"
             ></el-button>
-            <el-button
-              type="primary"
-              size="small"
-              icon="Delete"
-              @click="deleteTradeMark"
-            ></el-button>
+            <el-popconfirm
+              title="你确定要删除嘛?"
+              @confirm="deleteTradeMark(row.id)"
+            >
+              <template #reference>
+                <el-button
+                  type="primary"
+                  size="small"
+                  icon="Delete"
+                ></el-button>
+              </template>
+            </el-popconfirm>
           </template>
         </el-table-column>
       </el-table>
@@ -98,6 +104,7 @@
 import {
   reqHasTrademark,
   reqAddOrUpdateTradeMark,
+  reqDeleteTradeMark,
 } from '@/api/product/trademark'
 import { ref, onMounted, reactive } from 'vue'
 import {
@@ -180,8 +187,20 @@ const updateTradeMark = (row: TradeMark) => {
     Object.assign(tradeMarkParams, row)
 }
 // 删除品牌
-const deleteTradeMark = () => {
-  dialogFormVisible.value = true
+const deleteTradeMark = async (id: number) => {
+  const result = await reqDeleteTradeMark(id)
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功',
+    })
+    getHasTrademark(trademarkArr.value.length > 1 ? pageNo.value : pageNo - 1)
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '删除失败',
+    })
+  }
 }
 
 // 取消

@@ -33,7 +33,7 @@
               type="primary"
               size="small"
               icon="Edit"
-              @click="updateTradeMark"
+              @click="updateTradeMark(row)"
             ></el-button>
             <el-button
               type="primary"
@@ -58,7 +58,10 @@
       />
     </el-card>
     <!-- 新增品牌 -->
-    <el-dialog v-model="dialogFormVisible" title="添加品牌">
+    <el-dialog
+      v-model="dialogFormVisible"
+      :title="tradeMarkParams.id ? '修改品牌' : '添加品牌'"
+    >
       <el-form style="width: 80%">
         <el-form-item label="品牌名称">
           <el-input
@@ -160,12 +163,21 @@ const handleAvatarSuccess = (response: any) => {
 
 // 添加品牌
 const addTradeMark = () => {
-  dialogFormVisible.value = true
+  ;(dialogFormVisible.value = true),
+    (tradeMarkParams.id = 0),
+    (tradeMarkParams.tmName = ''),
+    (tradeMarkParams.logoUrl = '')
 }
 
 // 修改品牌
-const updateTradeMark = () => {
-  dialogFormVisible.value = true
+const updateTradeMark = (row: TradeMark) => {
+  console.log(row)
+  ;(dialogFormVisible.value = true),
+    // 展示品牌数据
+    // tradeMarkParams.id = row.id
+    // tradeMarkParams.tmName = row.tmName,
+    // tradeMarkParams.logoUrl = row.logoUrl
+    Object.assign(tradeMarkParams, row)
 }
 // 删除品牌
 const deleteTradeMark = () => {
@@ -182,13 +194,19 @@ const submit = async () => {
   console.log(result)
 
   if (result.code == 200) {
-    // 上传成功
+    // 成功
     dialogFormVisible.value = false
     ElMessage({
       type: 'success',
-      message: '添加成功',
+      message: tradeMarkParams.id ? '修改成功' : '添加成功',
     })
-    getHasTrademark()
+    getHasTrademark(tradeMarkParams.id ? pageNo.value : 1)
+  } else {
+    ElMessage({
+      type: 'error',
+      message: tradeMarkParams.id ? '修改失败' : '添加失败',
+    })
+    dialogFormVisible.value = false
   }
 }
 </script>

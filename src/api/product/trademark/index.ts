@@ -20,13 +20,10 @@ export const reqHasTrademark = (page: number, limit: number) =>
 
 // 添加和修改
 export const reqAddOrUpdateTradeMark = (data: TradeMark) => {
-    console.log(data,'ddd')
   // 修改
   if (data.id) {
     return request.put<any, any>(API.UPDATETRADEMARK_URL, data)
   } else {
-    debugger
-    console.log(request.post<any, any>(API.ADDTRADEMARK_URL,data))
-    return request.post<any, any>(API.ADDTRADEMARK_URL,data)
+    return request.post<any, any>(API.ADDTRADEMARK_URL, data)
   }
 }

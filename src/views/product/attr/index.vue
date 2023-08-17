@@ -80,12 +80,21 @@
           <el-table-column label="操作" width="120px">
             <template #="{ row, $index }">
               <el-button
-                @click="updateAttrArr"
+                @click="updateAttrArr(row)"
                 type="primary"
                 icon="Edit"
                 circle
               />
-              <el-button type="danger" icon="Delete" circle />
+
+              <el-popconfirm title="你确定删除嘛?" @confirm="deleteAttrArr(row.id)">
+                <template #reference>
+                  <el-button
+                    type="danger"
+                    icon="Delete"
+                    circle
+                  />
+                </template>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -139,10 +148,10 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, watch, ref, reactive } from 'vue'
+import { onMounted, watch, ref, reactive,onBeforeUnmount } from 'vue'
 // 引入商品分类管理的小仓库
 import useCategoryStore from '@/store/modules/category'
-import { reqAttr, reqAddAttr } from '@/api/product/attr'
+import { reqAttr, reqAddAttr, reqDeleteAttr } from '@/api/product/attr'
 import { ElMessage } from 'element-plus'
 const categoryStore = useCategoryStore()
 onMounted(() => {
@@ -196,15 +205,16 @@ const attrParams = reactive({
 const scene = ref<number>(0)
 const addAttrArr = () => {
   Object.assign(attrParams, {
-    attrName: '', 
+    attrName: '',
     attrValueList: [],
-    categoryId: categoryStore.c3Id, 
+    categoryId: categoryStore.c3Id,
     categoryLevel: 3,
   })
   scene.value = 1
 }
-const updateAttrArr = () => {
+const updateAttrArr = (row) => {
   scene.value = 1
+  Object.assign(attrParams, JSON.stringify(row))
 }
 const cancle = () => {
   scene.value = 0
@@ -233,6 +243,27 @@ const save = async () => {
     })
   }
 }
+
+const deleteAttrArr = async (id: number) => {
+  const result = await reqDeleteAttr(id)
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功',
+    })
+    getAttr()
+  } else {
+    ElMessage({
+      type: 'error',
+      message: '删除失败',
+    })
+  }
+}
+
+// 路由组件销毁时，把仓库数据清空
+onBeforeUnmount(()=>{
+  categoryStore.$reset()
+})
 </script>
 
 <style lang="scss" scoped></style>

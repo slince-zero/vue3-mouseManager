@@ -60,7 +60,9 @@
           ></el-table-column>
           <el-table-column label="操作" align="center" width="400px">
             <template #="{ row }">
-              <el-button type="primary" icon="User">分类角色</el-button>
+              <el-button type="primary" icon="User" @click="setRole(row)">
+                分配角色
+              </el-button>
               <el-button type="primary" icon="Edit" @click="updateUser(row)">
                 编辑角色
               </el-button>
@@ -116,6 +118,46 @@
         </div>
       </template>
     </el-drawer>
+    <!-- 分配角色-抽屉 -->
+    <el-drawer v-model="drawer2">
+      <template #header>
+        <h4>分配角色用户(职位)</h4>
+      </template>
+      <template #default>
+        <el-form>
+          <el-form-item label="用户姓名">
+            <el-input v-model="userParams.username" :disabled="true"></el-input>
+          </el-form-item>
+          <el-form-item label="职位列表">
+            <el-checkbox
+              v-model="checkAll"
+              :indeterminate="indeterminate"
+              @change="handleCheckAllChange"
+            >
+              全选
+            </el-checkbox>
+            <el-checkbox-group
+              v-model="chekedRole"
+              @change="handleCheckedCitiesChange"
+            >
+              <el-checkbox
+                v-for="(role, index) in allRole"
+                :key="index"
+                :label="role"
+              >
+                {{ role }}
+              </el-checkbox>
+            </el-checkbox-group>
+          </el-form-item>
+        </el-form>
+      </template>
+      <template #footer>
+        <div style="flex: auto">
+          <el-button @click="cancelClick">cancel</el-button>
+          <el-button type="primary" @click="confirmClick">confirm</el-button>
+        </div>
+      </template>
+    </el-drawer>
   </div>
 </template>
 
@@ -139,7 +181,7 @@ onMounted(() => {
 
 // 定义控制抽屉是否打开变量
 const drawer = ref(false)
-
+const drawer2 = ref(false)
 // 获取用户管理的信息
 const getHasUser = async (pager = 1) => {
   // 收集当前页码
@@ -196,6 +238,30 @@ const save = async () => {
       message: userParams.id ? '编辑失败' : '添加失败',
     })
   }
+}
+
+// 分配角色回调
+const setRole = (row: any) => {
+  drawer2.value = true
+  // 存储用户数据
+  Object.assign(userParams, row)
+}
+
+// 复选框-是否全选
+const checkAll = ref(false)
+const allRole = ref(['销售', '前端', '后端'])
+const chekedRole = ref(['销售'])
+// 设置复选框-不确定状态
+const indeterminate = ref(true)
+// 全选回调
+const handleCheckAllChange = (val: boolean) => {
+  chekedRole.value = val ? allRole.value : []
+  indeterminate.value = false
+}
+const handleCheckedCitiesChange = (value: string[]) => {
+  const checkedCount = value.length
+  checkAll.value = checkedCount === allRole.value.length
+  indeterminate.value = checkedCount > 0 && checkedCount < allRole.value.length
 }
 </script>
 

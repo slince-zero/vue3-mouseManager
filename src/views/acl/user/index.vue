@@ -145,7 +145,7 @@
                 :key="index"
                 :label="role"
               >
-                {{ role }}
+                {{ role.roleName }}
               </el-checkbox>
             </el-checkbox-group>
           </el-form-item>
@@ -153,8 +153,8 @@
       </template>
       <template #footer>
         <div style="flex: auto">
-          <el-button @click="cancelClick">cancel</el-button>
-          <el-button type="primary" @click="confirmClick">confirm</el-button>
+          <el-button @click="drawer2 = false">取消</el-button>
+          <el-button type="primary" @click="confirmClick">确认</el-button>
         </div>
       </template>
     </el-drawer>
@@ -163,7 +163,12 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, reactive } from 'vue'
-import { reqUser, reqAddOrUpdateUser } from '@/api/auth/user'
+import {
+  reqUser,
+  reqAddOrUpdateUser,
+  reqRoleList,
+  reqUpdateRole,
+} from '@/api/auth/user'
 import { ElMessage } from 'element-plus'
 // 当前页
 let pageNow = ref(1)
@@ -240,19 +245,25 @@ const save = async () => {
   }
 }
 
-// 分配角色回调
-const setRole = (row: any) => {
-  drawer2.value = true
-  // 存储用户数据
-  Object.assign(userParams, row)
-}
-
 // 复选框-是否全选
 const checkAll = ref(false)
-const allRole = ref(['销售', '前端', '后端'])
-const chekedRole = ref(['销售'])
+const allRole = ref([])
+const chekedRole = ref([])
 // 设置复选框-不确定状态
 const indeterminate = ref(true)
+
+// 分配角色回调
+const setRole = async (row: any) => {
+  // 存储用户数据
+  Object.assign(userParams, row)
+  const result = await reqRoleList(userParams.id)
+  if (result.code == 200) {
+    allRole.value = result.data.allRolesList
+    chekedRole.value = result.data.assignRoles
+    drawer2.value = true
+  }
+}
+
 // 全选回调
 const handleCheckAllChange = (val: boolean) => {
   chekedRole.value = val ? allRole.value : []
@@ -262,6 +273,24 @@ const handleCheckedCitiesChange = (value: string[]) => {
   const checkedCount = value.length
   checkAll.value = checkedCount === allRole.value.length
   indeterminate.value = checkedCount > 0 && checkedCount < allRole.value.length
+}
+
+// 确认发请求
+const confirmClick = async () => {
+  // 收集数据
+  const data = {
+    userId: userParams.id,
+    roleIdList: chekedRole.value.map((item) => item.id),
+  }
+  const result = await reqUpdateRole(data)
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: '分配职务成功',
+    })
+    drawer2.value = false
+    getHasUser(pageNow.value)
+  }
 }
 </script>
 

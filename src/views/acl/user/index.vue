@@ -13,10 +13,20 @@
     </el-card>
     <el-card style="margin: 10px 0">
       <el-button type="primary" @click="addUser">添加用户</el-button>
-      <el-button>批量删除</el-button>
+      <el-button
+        :disabled="selectArr.length ? false : true"
+        @click="deleteSelectUser"
+      >
+        批量删除
+      </el-button>
       <div>
         <!-- 展示用户信息 -->
-        <el-table style="margin: 10px 0" border :data="userArr">
+        <el-table
+          style="margin: 10px 0"
+          border
+          :data="userArr"
+          @selection-change="selectChange"
+        >
           <el-table-column type="selection"></el-table-column>
           <el-table-column
             label="#"
@@ -66,7 +76,14 @@
               <el-button type="primary" icon="Edit" @click="updateUser(row)">
                 编辑角色
               </el-button>
-              <el-button type="primary" icon="Delete">删除角色</el-button>
+              <el-popconfirm
+                title="你确定要删除吗?"
+                @confirm="deleteUser(row.id)"
+              >
+                <template #reference>
+                  <el-button type="primary" icon="Delete">删除角色</el-button>
+                </template>
+              </el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -168,6 +185,8 @@ import {
   reqAddOrUpdateUser,
   reqRoleList,
   reqUpdateRole,
+  reqDeleteOneUser,
+  reqDeleteManyUser,
 } from '@/api/auth/user'
 import { ElMessage } from 'element-plus'
 // 当前页
@@ -290,6 +309,40 @@ const confirmClick = async () => {
     })
     drawer2.value = false
     getHasUser(pageNow.value)
+  }
+}
+
+// 删除
+const deleteUser = async (id: number) => {
+  const result = await reqDeleteOneUser(id)
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: '删除成功',
+    })
+    getHasUser(pageNow.value)
+  }
+}
+
+// 准备一个批量删除数据的数组
+const selectArr = ref([])
+// 批量获取用户id
+const selectChange = (value: any) => {
+  selectArr.value = value
+}
+// 批量删除
+const deleteSelectUser = async () => {
+  const idList = selectArr.value.map((item) => {
+    return item.id
+  })
+  const result = await reqDeleteManyUser(idList)
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: '批量删除成功',
+    })
+    getHasUser(pageNow.value)
+
   }
 }
 </script>

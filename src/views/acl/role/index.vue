@@ -18,7 +18,9 @@
       </el-form>
     </el-card>
     <el-card style="margin: 10px 0">
-      <el-button type="primary" icon="Plus">添加职位</el-button>
+      <el-button type="primary" icon="Plus" @click="addRole">
+        添加职位
+      </el-button>
       <el-table border style="margin: 10px 0" :data="allRole">
         <el-table-column
           type="index"
@@ -50,11 +52,24 @@
           show-overflow-tooltip
         ></el-table-column>
         <el-table-column label="操作" align="center" width="280px">
-          <el-button type="primary" size="small" icon="User">
-            分配权限
-          </el-button>
-          <el-button type="primary" size="small" icon="Edit">编辑</el-button>
-          <el-button type="primary" size="small" icon="Delete">删除</el-button>
+          <template #default="{ row }">
+            <div>
+              <el-button type="primary" size="small" icon="User">
+                分配权限
+              </el-button>
+              <el-button
+                type="primary"
+                size="small"
+                icon="Edit"
+                @click="editRole(row)"
+              >
+                编辑
+              </el-button>
+              <el-button type="primary" size="small" icon="Delete">
+                删除
+              </el-button>
+            </div>
+          </template>
         </el-table-column>
       </el-table>
     </el-card>
@@ -68,11 +83,30 @@
       background
     />
   </div>
+  <!-- 添加与编辑结构 -->
+  <el-dialog
+    v-model="dialogFormVisible"
+    :title="roleParams.id ? '编辑职位' : '添加职位'"
+  >
+    <el-form>
+      <el-form-item label="职位名称">
+        <el-input
+          placeholder="请输入职位"
+          v-model="roleParams.roleName"
+        ></el-input>
+      </el-form-item>
+    </el-form>
+    <template #footer>
+      <el-button @click="dialogFormVisible = false">取消</el-button>
+      <el-button type="primary" @click="submit">确定</el-button>
+    </template>
+  </el-dialog>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
-import { reqRoleList } from '@/api/auth/role'
+import { ref, onMounted, reactive } from 'vue'
+import { reqRoleList, reqAddOrUpdateRole } from '@/api/auth/role'
+import { ElMessage } from 'element-plus'
 import useLayoutStore from '@/store/setting'
 
 // 当前页码
@@ -85,6 +119,13 @@ const total = ref(0)
 const keyWord = ref('')
 // 存储全部role数据
 const allRole = ref([])
+// 控制对话框的显示与隐藏
+const dialogFormVisible = ref(false)
+// 存储所有角色信息
+const roleParams = reactive({
+  roleName: '',
+  id: 0,
+})
 onMounted(() => {
   // 发送请求的方法
   getHasRole()
@@ -108,6 +149,30 @@ const search = () => {
 // 重置
 const reset = () => {
   useStore.refresh = !useStore.refresh
+}
+
+// 添加职位-弹出框
+const addRole = async () => {
+  dialogFormVisible.value = true
+  Object.assign(roleParams, {
+    roleName: '',
+  })
+}
+// 编辑职位
+const editRole = (row: any) => {
+  dialogFormVisible.value = true
+  Object.assign(roleParams, row)
+}
+const submit = async () => {
+  const result = await reqAddOrUpdateRole(roleParams)
+  if (result.code == 200) {
+    ElMessage({
+      type: 'success',
+      message: roleParams.id ? '编辑成功' : '添加成功',
+    })
+    dialogFormVisible.value = false
+    getHasRole(roleParams.id ? pageNow.value : 1)
+  }
 }
 </script>
 

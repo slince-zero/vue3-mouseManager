@@ -3,11 +3,20 @@
     <el-card style="height: 80px">
       <el-form :inline="true" class="form">
         <el-form-item label="用户名">
-          <el-input placeholder="请输入用户名"></el-input>
+          <el-input
+            placeholder="请输入用户名"
+            v-model="searchKeyWord"
+          ></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary">搜索</el-button>
-          <el-button>重置</el-button>
+          <el-button
+            @click="search"
+            type="primary"
+            :disabled="searchKeyWord ? false : true"
+          >
+            搜索
+          </el-button>
+          <el-button @click="reset">重置</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -180,6 +189,7 @@
 
 <script lang="ts" setup>
 import { ref, onMounted, reactive } from 'vue'
+import useLayoutStore from '@/store/setting'
 import {
   reqUser,
   reqAddOrUpdateUser,
@@ -189,6 +199,9 @@ import {
   reqDeleteManyUser,
 } from '@/api/auth/user'
 import { ElMessage } from 'element-plus'
+
+// 获取仓库对象
+const useStore = useLayoutStore()
 // 当前页
 let pageNow = ref(1)
 
@@ -210,7 +223,11 @@ const drawer2 = ref(false)
 const getHasUser = async (pager = 1) => {
   // 收集当前页码
   pageNow.value = pager
-  const result = await reqUser(pageNow.value, pageNum.value)
+  const result = await reqUser(
+    pageNow.value,
+    pageNum.value,
+    searchKeyWord.value,
+  )
   if (result.code == 200) {
     total.value = result.data.total
     userArr.value = result.data.records
@@ -342,8 +359,18 @@ const deleteSelectUser = async () => {
       message: '批量删除成功',
     })
     getHasUser(pageNow.value)
-
   }
+}
+
+// 搜索功能-关键字
+const searchKeyWord = ref('')
+const search = () => {
+  getHasUser()
+  searchKeyWord.value = ''
+}
+// 重置
+const reset = () => {
+  useStore.refresh = !useStore.refresh
 }
 </script>
 

@@ -17,8 +17,10 @@ enum API {
   DeleteManyUser_URL = 'http://114.115.179.162:8022/prod-api/admin/acl/user/batchRemove',
 }
 
-export const reqUser = (page: number, limit: number) =>
-  request.get<any, any>(API.ALLUSER_URL + `${page}/${limit}`)
+export const reqUser = (page: number, limit: number, username: string) =>
+  request.get<any, any>(
+    API.ALLUSER_URL + `${page}/${limit}/?username=${username}`,
+  )
 export const reqAddOrUpdateUser = (data: any) => {
   if (data.id) {
     return request.put<any, any>(API.UPDATEUSER_URL, data)

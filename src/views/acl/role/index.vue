@@ -70,9 +70,17 @@
               >
                 编辑
               </el-button>
-              <el-button type="primary" size="small" icon="Delete">
-                删除
-              </el-button>
+
+              <el-popconfirm
+                title="你确定要删除吗?"
+                @confirm="handlerDelete(row.id)"
+              >
+                <template #reference>
+                  <el-button type="primary" size="small" icon="Delete">
+                    删除
+                  </el-button>
+                </template>
+              </el-popconfirm>
             </div>
           </template>
         </el-table-column>
@@ -141,6 +149,7 @@ import {
   reqAddOrUpdateRole,
   reqAuthList,
   reqRoleAuthList,
+  reqDeleteRole,
 } from '@/api/auth/role'
 import { ElMessage } from 'element-plus'
 import useLayoutStore from '@/store/setting'
@@ -259,13 +268,25 @@ const handler = async () => {
   const arr1 = tree.value.getHalfCheckedKeys()
   const permissionId = arr.concat(arr1)
   const result = await reqRoleAuthList(roleId, permissionId)
-  if(result.code==200){
-    drawer.value=true
+  if (result.code == 200) {
+    drawer.value = true
     ElMessage({
-      type:'success',
-      message:'分配权限成功'
+      type: 'success',
+      message: '分配权限成功',
     })
     window.location.reload()
+  }
+}
+
+// 删除角色
+const handlerDelete = async (id: any) => {
+  const result = await reqDeleteRole(id)
+  if(result.code==200){
+    ElMessage({
+      type: 'success',
+      message: '删除成功',
+    })
+    getHasRole()
   }
 }
 </script>

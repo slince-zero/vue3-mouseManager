@@ -54,7 +54,12 @@
         <el-table-column label="操作" align="center" width="280px">
           <template #default="{ row }">
             <div>
-              <el-button type="primary" size="small" icon="User">
+              <el-button
+                @click="setPermission(row)"
+                type="primary"
+                size="small"
+                icon="User"
+              >
                 分配权限
               </el-button>
               <el-button
@@ -101,11 +106,42 @@
       <el-button type="primary" @click="submit">确定</el-button>
     </template>
   </el-dialog>
+  <!-- 抽屉结构：角色分配权限 -->
+  <el-drawer v-model="drawer">
+    <template #header>
+      <h4>角色分配权限</h4>
+    </template>
+    <template #default>
+      <div>
+        <!-- 树形控件 -->
+        <el-tree
+          ref="tree"
+          :data="menuArr"
+          show-checkbox
+          node-key="id"
+          default-expand-all
+          :default-checked-keys="selectArr"
+          :props="defaultProps"
+        />
+      </div>
+    </template>
+    <template #footer>
+      <div style="flex: auto">
+        <el-button @click="drawer = false">取消</el-button>
+        <el-button type="primary" @click="handler">确认</el-button>
+      </div>
+    </template>
+  </el-drawer>
 </template>
 
 <script lang="ts" setup>
 import { ref, onMounted, reactive } from 'vue'
-import { reqRoleList, reqAddOrUpdateRole } from '@/api/auth/role'
+import {
+  reqRoleList,
+  reqAddOrUpdateRole,
+  reqAuthList,
+  reqRoleAuthList,
+} from '@/api/auth/role'
 import { ElMessage } from 'element-plus'
 import useLayoutStore from '@/store/setting'
 
@@ -126,6 +162,8 @@ const roleParams = reactive({
   roleName: '',
   id: 0,
 })
+// 控制抽屉结构关闭
+const drawer = ref(false)
 onMounted(() => {
   // 发送请求的方法
   getHasRole()
@@ -172,6 +210,62 @@ const submit = async () => {
     })
     dialogFormVisible.value = false
     getHasRole(roleParams.id ? pageNow.value : 1)
+  }
+}
+
+// 定义数组用于存储用户权限的数据
+const menuArr = ref([])
+// 顶一个数组用于存储勾选的节点ID（四级）
+const selectArr = ref([])
+// 分配权限
+const setPermission = async (row: any) => {
+  drawer.value = true
+  // 收集当前要分类权限的数据
+  Object.assign(roleParams, row)
+  const result = await reqAuthList(roleParams.id)
+  if (result.code == 200) {
+    menuArr.value = result.data
+    selectArr.value = filterSelectArr(menuArr.value, [])
+  }
+}
+
+// 树形结构
+const defaultProps = {
+  children: 'children',
+  label: 'name',
+}
+
+const filterSelectArr = (allData: any, initArr: any) => {
+  allData.forEach((item: any) => {
+    if (item.select && item.level == 4) {
+      initArr.push(item.id)
+    }
+    if (item.children && item.children.length > 0) {
+      filterSelectArr(item.children, initArr)
+    }
+  })
+  return initArr
+}
+
+// 获取树形组件实例
+const tree = ref()
+// 分配权限提交
+const handler = async () => {
+  // 职位id
+  const roleId = roleParams.id
+  // 选中id
+  const arr = tree.value.getCheckedKeys()
+  // 半选id
+  const arr1 = tree.value.getHalfCheckedKeys()
+  const permissionId = arr.concat(arr1)
+  const result = await reqRoleAuthList(roleId, permissionId)
+  if(result.code==200){
+    drawer.value=true
+    ElMessage({
+      type:'success',
+      message:'分配权限成功'
+    })
+    window.location.reload()
   }
 }
 </script>

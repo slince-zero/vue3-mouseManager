@@ -13,7 +13,12 @@
       icon="FullScreen"
       @click="updateFullScreen"
     ></el-button>
-    <el-button size="small" circle icon="Setting"></el-button>
+    <el-button
+      @click="changeSubject"
+      size="small"
+      circle
+      :icon="dark ? 'Moon' : 'Sunny'"
+    ></el-button>
     <img
       :src="userStore.avatar"
       alt=""
@@ -38,6 +43,7 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 import useUserStore from '@/store/modules/user'
+import { ref } from 'vue'
 // 引入小仓库里面定义的useLayoutStore，所有组件都可以使用到
 import useLayoutStore from '@/store/setting'
 const useLayout = useLayoutStore()
@@ -70,6 +76,15 @@ const logout = async () => {
   $router.push({ path: '/login' })
   // 两种写法是等价的，只不过上面那个传的是对象
   // $router.push('/login')
+}
+
+// 定义切换主题颜色变量
+const dark = ref(false)
+// 更换主题
+const changeSubject = () => {
+  dark.value = !dark.value
+  const html = document.documentElement
+  dark.value ? (html.className = 'dark') : (html.className = '')
 }
 </script>
 
